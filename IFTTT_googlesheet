@@ -1,0 +1,76 @@
+
+//Using IFTTT to update google sheet
+//1. Create an account on IFTTT
+//2. Build an applet with Webhooks 
+//3. If: receive a web request
+//4. Then: Add row to spreadsheet
+//Reference video https://www.youtube.com/watch?v=YkA4TUgCmRA
+
+
+#include <WiFi.h>
+#include <WiFiMulti.h>
+#include <HTTPClient.h>
+
+WiFiMulti wifiMulti;
+char ssid[] = "NETGEAR70";
+char pass[] = "windypiano374";
+
+// String IFTTTUrl = "http://maker.ifttt.com/trigger/photo/with/key/xxxxxxxxxxxxxxxxxxxx";
+String IFTTTUrl = "https://maker.ifttt.com/trigger/photo/with/key/bpzm0C-CNiH6w7h0B0SvNd";
+
+int photoPin = 33;
+int photoVal = 0;
+
+void setup() {
+  Serial.begin(115200);
+
+  Serial.println();
+
+  for (uint8_t t = 4; t > 0; t--) {
+    Serial.printf("[SETUP] WAIT %d...\n", t);
+    Serial.flush();
+    delay(1000);
+  }
+
+  wifiMulti.addAP(ssid, pass);
+
+  pinMode(photoPin, INPUT);
+}
+
+void loop() {
+  if ((wifiMulti.run() == WL_CONNECTED)) {
+    //--------------------------------------------------
+
+    photoVal = analogRead(photoPin);
+
+    Serial.print("Photo-Resistor Value: ");
+    Serial.println(photoVal);
+
+    String url = IFTTTUrl + "?value1=" + String((int)photoVal);
+
+    Serial.print("url: ");
+    Serial.println(url);
+
+    //--------------------------------------------------
+    HTTPClient http;
+
+    Serial.print("[HTTP] begin...\n");
+    http.begin(url);
+
+    Serial.print("[HTTP] GET...\n");
+    int httpCode = http.GET();
+
+    if (httpCode > 0) {
+      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+      
+      if (httpCode == HTTP_CODE_OK) {
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+    } else {
+      Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
+    http.end();
+  }
+  delay(10000);
+}
