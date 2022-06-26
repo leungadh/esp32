@@ -7,12 +7,18 @@ ESP32 program collections
 
 
 ## OPENWEATHER_OLDE
-### Source: https://www.youtube.com/watch?v=qwM8oiy0Vy4 <br>
+- Source: https://www.youtube.com/watch?v=qwM8oiy0Vy4 <br>
 - Using Weather API from https://openweathermap.org to retrieve weather info to ESP32 <br>
 - Display on the SSD1306 OLED
 
 ## Photoresistor with ESP32
+- Reading the values on photoresistors
+- Use it to control LED signal
+#### REFERENCE: 
 - Board: DOIT ESP32 DEVKIT V1
-### REFERENCE: 
 - https://circuits4you.com/2018/02/02/esp32-led-blink-example/
 - https://www.instructables.com/Interfacing-Photoresistor-With-ESP32/
+
+## IFTTT
+- Use IFTTT to update an google spreadsheet with Photo-resistor numbers
+
